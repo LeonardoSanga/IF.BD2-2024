@@ -1,0 +1,129 @@
+-- Exercício 1
+
+CREATE TABLE ATOR 
+	(
+	idAtor INTEGER,
+	nome VARCHAR (30),
+	dtaNasc DATE,
+	CONSTRAINT pk_ator PRIMARY KEY (idAtor)
+	);
+
+CREATE TABLE FILME
+	(
+	codFilme INTEGER,
+	nome VARCHAR (20),
+	genero VARCHAR (15),
+	dtaLanc DATE,
+	CONSTRAINT pk_filme PRIMARY KEY (codFilme)  
+	);
+
+CREATE TABLE atorEstrelaFilme
+	(
+	idAtor INTEGER,
+	codFilme INTEGER,
+	CONSTRAINT pk_atorestrelafilme PRIMARY KEY (idAtor, codFilme),
+	CONSTRAINT ATOR_has_FILME_FKIndex1 FOREIGN KEY (idAtor) REFERENCES ATOR,
+	CONSTRAINT ATOR_has_FILME_FKIndex2 FOREIGN KEY (codFilme) REFERENCES FILME 
+	);
+
+CREATE TABLE EXEMPLAR 
+	(
+	nroExemplar INTEGER,
+	codFilme INTEGER,
+	CONSTRAINT pk_exemplar PRIMARY KEY (nroExemplar, codFilme),
+	CONSTRAINT EXEMPLAR_FKIndex1 FOREIGN KEY (codFilme) REFERENCES FILME
+	);
+
+CREATE TABLE CLIENTE 
+	(
+	codCliente INTEGER,
+	nome VARCHAR (30),
+	rua VARCHAR (20),
+	nro INTEGER,
+	cidade VARCHAR (20),
+	CEP VARCHAR (9),
+	CONSTRAINT pk_cliente PRIMARY KEY (codCliente)
+	);
+
+CREATE TABLE TelefoneCliente
+	(
+	nroTelefone INTEGER,
+	codCliente INTEGER,
+	CONSTRAINT pk_telefonecliente PRIMARY KEY (nroTelefone, codCliente),
+	CONSTRAINT TelefoneCliente_FKIndex1 FOREIGN KEY (codCliente) REFERENCES CLIENTE
+	);
+
+CREATE TABLE CLIENTE_has_EXEMPLAR
+	(
+	codCliente INTEGER,
+	codFilme INTEGER,
+	nroExemplar INTEGER,
+	dtaEmpr DATE,
+	dtaDev DATE,
+	CONSTRAINT pk_clientehasexemplar PRIMARY KEY (codCliente, codFilme, nroExemplar, dtaEmpr),
+	CONSTRAINT CLENTE_has_EXEMPLAR_FKIndex1 FOREIGN KEY (codCliente) REFERENCES CLIENTE,
+	CONSTRAINT CLIENTE_has_EXEMPLAR_FKIndex2 FOREIGN KEY (codFilme, nroExemplar) REFERENCES EXEMPLAR
+	);
+
+INSERT INTO ATOR VALUES (1, 'Tom Cruise', '19/02/1969'),
+						(2, 'Brad Pitt', '24/04/1975'),
+						(3, 'Angeline Jolie', '07/07/1979');
+
+SELECT * FROM ATOR;
+SELECT * FROM FILME;
+SELECT * FROM atorEstrelaFilme;
+SELECT * FROM EXEMPLAR;
+SELECT * FROM CLIENTE;
+SELECT * FROM TelefoneCliente;
+SELECT * FROM CLIENTE_has_EXEMPLAR;
+
+
+
+-- Exercíco 2
+
+CREATE TABLE VEICULO
+	(
+	placa VARCHAR(7),
+	modelo VARCHAR(50),
+	ano INTEGER,
+	CONSTRAINT pk_veiculo PRIMARY KEY (placa)
+	);
+
+CREATE TABLE PROPRIETARIO
+	(
+	codPropri INTEGER,
+	nome VARCHAR(50),
+	--tipo CHAR(1) CHECK (tipo IN ('F', 'J')), 
+	CONSTRAINT pk_proprietario PRIMARY KEY (codPropri)
+	);
+
+CREATE TABLE POSSUI
+	(
+	codPropri INTEGER,
+	placa VARCHAR(7),
+	CONSTRAINT pk_possui PRIMARY KEY (codPropri, placa),
+	CONSTRAINT POSSUI_FKIndex1 FOREIGN KEY (codPropri) REFERENCES PROPRIETARIO,
+	CONSTRAINT POSSUI_FKIndex2 FOREIGN KEY (placa) REFERENCES VEICULO
+	);
+
+CREATE TABLE FISICO
+	(
+	codPropri INTEGER,
+	cpf VARCHAR(11) UNIQUE,
+	CONSTRAINT pk_fisico PRIMARY KEY (codPropri),
+	CONSTRAINT FISICO_FKIndex1 FOREIGN KEY (codPropri) REFERENCES PROPRIETARIO
+	);
+
+CREATE TABLE JURIDICO
+	(
+	codPropri INTEGER,
+	cnpj VARCHAR(14) UNIQUE,
+	CONSTRAINT pk_juridico PRIMARY KEY (codPropri),
+	CONSTRAINT JURIDICO_FKIndex1 FOREIGN KEY (codPropri) REFERENCES PROPRIETARIO
+	);
+
+SELECT * FROM VEICULO;
+SELECT * FROM PROPRIETARIO;
+SELECT * FROM POSSUI;
+SELECT * FROM FISICO;
+SELECT * FROM JURIDICO;
